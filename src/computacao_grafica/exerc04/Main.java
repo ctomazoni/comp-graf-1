@@ -1,4 +1,4 @@
-package computacao_grafica.exerc03;
+package computacao_grafica.exerc04;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -17,6 +17,10 @@ public class Main implements GLEventListener, KeyListener {
     private GL gl;
     private GLU glu;
     private GLAutoDrawable glDrawable;
+    private int angulo = 45;
+    private int raio = 100;
+    private int deslocHor = 0;
+    private int deslocVer = 0;
 
     @Override
     public void init(GLAutoDrawable drawable) {
@@ -39,22 +43,19 @@ public class Main implements GLEventListener, KeyListener {
         SRU();
 
         gl.glColor3f(0.0f, 0.0f, 0.0f);
-        gl.glPointSize(2.0f);
+        gl.glLineWidth(3.0f);
+        gl.glPointSize(5.0f);
         gl.glBegin(GL.GL_POINTS);
-            for (int i = 0; i < 360; i++) {
-                gl.glVertex2d(retornaX(i, 100)-100, retornaY(i, 100)+100);
-                gl.glVertex2d(retornaX(i, 100)+100, retornaY(i, 100)+100);
-                gl.glVertex2d(retornaX(i, 100), retornaY(i, 100)-100);
-            }
+            /*gl.glVertex2d(deslocHor, deslocVer);
+            gl.glVertex2d(deslocHor+raio-45+angulo, deslocVer+raio+45-angulo);*/
+            gl.glVertex2d(retornaX(45, 100)-70+deslocHor, retornaY(45, 100)-70+deslocVer);
+            gl.glVertex2d(retornaX(angulo, raio)+30+deslocHor, retornaY(angulo, raio)+30+deslocVer);
         gl.glEnd();
-        gl.glFlush();
-        
-        gl.glColor3f(0.0f, 1.0f, 1.0f);
-        gl.glPointSize(2.0f);
-        gl.glBegin(GL.GL_LINE_LOOP);
-            gl.glVertex2d(-100, 100);
-            gl.glVertex2d(100, 100);
-            gl.glVertex2d(0, -100);
+        gl.glBegin(GL.GL_LINES);
+            /*gl.glVertex2d(deslocHor, deslocVer);
+            gl.glVertex2d(deslocHor+raio-45+angulo, deslocVer+raio+45-angulo);*/
+            gl.glVertex2d(retornaX(45, 100)-70+deslocHor, retornaY(45, 100)-70+deslocVer);
+            gl.glVertex2d(retornaX(angulo, raio)+30+deslocHor, retornaY(angulo, raio)+30+deslocVer);
         gl.glEnd();
         gl.glFlush();
     }
@@ -63,6 +64,23 @@ public class Main implements GLEventListener, KeyListener {
     public void keyPressed(KeyEvent e) {
         System.out.println("--- keyPressed ---");
         switch (e.getKeyCode()) {
+            case 'Q' :
+                deslocaParaEsquerda();
+                break;
+            case 'W' :
+                deslocaParaDireita();
+                break;
+            case 'A' :
+                diminuiRaio();
+                break;
+            case 'S' :
+                aumentaRaio();
+                break;
+            case 'Z' :
+                diminuiAngulo();
+                break;
+            case 'X' :
+                aumentaAngulo();
         }
     }
 
@@ -94,15 +112,15 @@ public class Main implements GLEventListener, KeyListener {
         gl.glColor3f(1.0f, 0.0f, 0.0f);
         gl.glLineWidth(1.0f);
         gl.glBegin(GL.GL_LINES);
-            gl.glVertex2f( -200.0f, 0.0f );
-            gl.glVertex2f(  200.0f, 0.0f );
+            gl.glVertex2f(-200.0f+deslocHor, 0.0f+deslocVer);
+            gl.glVertex2f( 200.0f+deslocHor, 0.0f+deslocVer);
         gl.glEnd();
 
         // eixo y
         gl.glColor3f(0.0f, 1.0f, 0.0f);
         gl.glBegin(GL.GL_LINES);
-            gl.glVertex2f(  0.0f, -200.0f);
-            gl.glVertex2f(  0.0f, 200.0f );
+            gl.glVertex2f(0.0f+deslocHor, -200.0f+deslocVer);
+            gl.glVertex2f(0.0f+deslocHor,  200.0f+deslocVer);
         gl.glEnd();
     }
 
@@ -112,6 +130,48 @@ public class Main implements GLEventListener, KeyListener {
 
     public double retornaY(double angulo, double raio) {
         return (raio * Math.sin(Math.PI * angulo / 180.0));
+    }
+
+    public void deslocaParaEsquerda() {
+        if (deslocHor > -500) {
+            deslocHor -= 10;
+        }
+        glDrawable.display();
+    }
+
+    public void deslocaParaDireita() {
+        if (deslocHor < 500) {
+            deslocHor += 10;
+        }
+        glDrawable.display();
+    }
+
+    public void diminuiRaio() {
+        if (raio > -500) {
+            raio -= 5;
+        }
+        glDrawable.display();
+    }
+
+    public void aumentaRaio() {
+        if (raio < 500) {
+            raio += 5;
+        }
+        glDrawable.display();
+    }
+
+    public void diminuiAngulo() {
+        if (angulo > -10) {
+            angulo -= 5;
+        }
+        glDrawable.display();
+    }
+
+    public void aumentaAngulo() {
+        if (angulo < 350) {
+            angulo += 5;
+        }
+        glDrawable.display();
     }
 
 }
